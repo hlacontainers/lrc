@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  
+ po-lrc-base-alpine:
+  build:
+   context: context
+   dockerfile: Dockerfile-portico-alpine
+   args:
+   - VERSION=${PORTICO_VERSION}
+   - VERSION_STRING=portico-lrc:${PORTICO_VERSION}-alpine
+  image: ${REPOSITORY}portico-lrc:${PORTICO_VERSION}-alpine
+
+ po-lrc-base-debian:
+  build:
+   context: context
+   dockerfile: Dockerfile-portico-debian
+   args:
+   - VERSION=${PORTICO_VERSION}
+   - VERSION_STRING=portico-lrc:${PORTICO_VERSION}-debian
+  image: ${REPOSITORY}portico-lrc:${PORTICO_VERSION}-debian
+
+ po-lrc-base-centos7:
+  build:
+   context: context
+   dockerfile: Dockerfile-portico-centos7
+   args:
+   - VERSION=${PORTICO_VERSION}
+   - VERSION_STRING=portico-lrc:${PORTICO_VERSION}-centos7
+  image: ${REPOSITORY}portico-lrc:${PORTICO_VERSION}-centos7
+
+ po-lrc-base:
+  build:
+   context: context
+   dockerfile: Dockerfile-portico
+   args:
+   - VERSION=${PORTICO_VERSION}
+   - VERSION_STRING=portico-lrc:${PORTICO_VERSION}
+  image: ${REPOSITORY}portico-lrc:${PORTICO_VERSION}

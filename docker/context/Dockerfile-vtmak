@@ -1,0 +1,59 @@
+#
+# Copyright 2020 Tom van den Berg (TNO, The Netherlands).
+# SPDX-License-Identifier: Apache-2.0
+#
+
+ARG VERSION
+ARG REPOSITORY
+
+#########################
+# Create Base image
+#########################
+FROM ${REPOSITORY}vtmak-rtiexec:${VERSION} AS base
+
+ARG VERSION
+
+# LRC files are installed here
+ENV RTI_HOME=/usr/local/makRti${VERSION}
+
+# Remove lib files we do not need in the next stage
+RUN rm -rf $RTI_HOME/lib/gui
+RUN rm -rf $RTI_HOME/bin/gui
+RUN rm -f $RTI_HOME/lib/libRTI-NG_64.so
+RUN find $RTI_HOME/bin -type f -not -name '*.xml' -delete
+
+#########################
+# Create Centos7 image
+#########################
+FROM centos:7
+
+ARG VERSION
+
+# LRC files are installed here
+ENV RTI_HOME_FROM=/usr/local/makRti${VERSION}
+ENV LRC_HOME=/usr/local/lrc
+ENV RTI_HOME=${LRC_HOME}/code
+
+# Copy LRC files
+COPY --from=base ${RTI_HOME_FROM}/bin/		${RTI_HOME}/bin/
+COPY --from=base ${RTI_HOME_FROM}/lib/		${RTI_HOME}/lib/
+COPY --from=base ${RTI_HOME_FROM}/include/	${RTI_HOME}/include/
+COPY --from=base ${RTI_HOME_FROM}/rid.mtl	${RTI_HOME}/rid.mtl
+
+# Copy launch scripts
+COPY vtmak/init.sh launch.sh ${LRC_HOME}/
+
+# Declare volume that can be mounted into other containers
+VOLUME ["${LRC_HOME}"]
+
+# Declare entrypoint to copy volume explicitly; needed in Kubernetes
+ENTRYPOINT [ "sh", "-c", " \
+   if [ -n \"$1\" ]; then \
+      if [ -n \"$OPTS\" ]; then \
+         cp $OPTS $LRC_HOME $1; \
+      else \
+         cp -a $LRC_HOME $1; \
+      fi; \
+      echo \"Copied $LRC_HOME to $1\"; \
+   fi" , \
+"--" ]

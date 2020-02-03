@@ -1,0 +1,48 @@
+#
+# Copyright 2020 Tom van den Berg (TNO, The Netherlands).
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Set default for build-time ARGs
+ARG VERSION=latest
+ARG REPOSITORY=
+
+#########################
+# Create Base image
+#########################
+FROM ${REPOSITORY}pitch-crc:${VERSION} AS crc
+
+#########################
+# Create Alpine image
+#########################
+FROM openjdk:8-alpine
+
+# LRC files are installed here
+ENV LRC_HOME=/usr/local/lrc
+ENV RTI_HOME=${LRC_HOME}/code
+
+# Copy LRC files
+COPY --from=crc /usr/local/prti1516e/include ${RTI_HOME}/include
+COPY --from=crc /usr/local/prti1516e/lib ${RTI_HOME}/lib
+
+# Copy LRC setting files
+COPY --from=crc /root/prti1516e/prti1516eLRC.settings ${RTI_HOME}
+COPY --from=crc /root/prti1516e/prti1516e.logging ${RTI_HOME}
+
+# Copy launch scripts
+ADD pitch/init.sh launch.sh ${LRC_HOME}/
+
+# Set common environment variables
+ENV LRC_CLASSPATH=${RTI_HOME}/lib/prti1516e.jar:${RTI_HOME}/lib/prticore.jar:${RTI_HOME}/lib/booster1516.jar
+ENV	LRC_LIBRARYPATH=${RTI_HOME}/lib/gcc41_64:${JAVA_HOME}/lib/amd64:${JAVA_HOME}/lib/amd64/server
+ENV	LD_LIBRARY_PATH=${LRC_LIBRARYPATH}:${LD_LIBRARY_PATH}
+ENV	CLASSPATH=${LRC_CLASSPATH}:${CLASSPATH}
+
+# Set entrypoint
+WORKDIR ${LRC_HOME}
+ENTRYPOINT ["/bin/sh", "./launch.sh"]
+RUN chmod +x ./launch.sh
+
+# Declare version
+ARG VERSION_STRING
+ENV LRC_VERSION $VERSION_STRING

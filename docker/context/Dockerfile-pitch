@@ -1,0 +1,48 @@
+#
+# Copyright 2020 Tom van den Berg (TNO, The Netherlands).
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Set default for build-time ARGs
+ARG VERSION=latest
+ARG REPOSITORY=
+
+#########################
+# Create Base image
+#########################
+FROM ${REPOSITORY}pitch-crc:${VERSION} AS crc
+
+#########################
+# Create Minimal image
+#########################
+FROM busybox
+
+# LRC files are installed here
+ENV LRC_HOME=/usr/local/lrc
+ENV RTI_HOME=${LRC_HOME}/code
+
+# Copy LRC files
+COPY --from=crc /usr/local/prti1516e/include ${RTI_HOME}/include
+COPY --from=crc /usr/local/prti1516e/lib ${RTI_HOME}/lib
+
+# Copy LRC setting files
+COPY --from=crc /root/prti1516e/prti1516eLRC.settings ${RTI_HOME}
+COPY --from=crc /root/prti1516e/prti1516e.logging ${RTI_HOME}
+
+# Copy launch scripts
+ADD pitch/init.sh launch.sh ${LRC_HOME}/
+
+# Declare volume that can be mounted into other containers
+VOLUME ["${LRC_HOME}"]
+
+# Declare entrypoint to copy volume explicitly; needed in Kubernetes
+ENTRYPOINT [ "sh", "-c", " \
+   if [ -n \"$1\" ]; then \
+      if [ -n \"$OPTS\" ]; then \
+         cp $OPTS $LRC_HOME $1; \
+      else \
+         cp -a $LRC_HOME $1; \
+      fi; \
+      echo \"Copied $LRC_HOME to $1\"; \
+   fi" , \
+"--" ]

@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+ pi-lrc-base-alpine:
+  build:
+   context: context
+   dockerfile: Dockerfile-pitch-alpine
+   args:
+   - VERSION=${PITCH_VERSION}
+   - VERSION_STRING=pitch-lrc:${PITCH_VERSION}-alpine
+   - REPOSITORY=${REPOSITORY}
+  image: ${REPOSITORY}pitch-lrc:${PITCH_VERSION}-alpine
+
+ pi-lrc-base-debian:
+  build:
+   context: context
+   dockerfile: Dockerfile-pitch-debian
+   args:
+   - VERSION=${PITCH_VERSION}
+   - VERSION_STRING=pitch-lrc:${PITCH_VERSION}-debian
+   - REPOSITORY=${REPOSITORY}
+  image: ${REPOSITORY}pitch-lrc:${PITCH_VERSION}-debian
+
+ pi-lrc-base-centos7:
+  build:
+   context: context
+   dockerfile: Dockerfile-pitch-centos7
+   args:
+   - VERSION=${PITCH_VERSION}
+   - VERSION_STRING=pitch-lrc:${PITCH_VERSION}-centos7
+   - REPOSITORY=${REPOSITORY}
+  image: ${REPOSITORY}pitch-lrc:${PITCH_VERSION}-centos7
+
+ pi-lrc-base:
+  build:
+   context: context
+   dockerfile: Dockerfile-pitch
+   args:
+   - VERSION=${PITCH_VERSION}
+   - VERSION_STRING=pitch-lrc:${PITCH_VERSION}
+   - REPOSITORY=${REPOSITORY}
+  image: ${REPOSITORY}pitch-lrc:${PITCH_VERSION}

@@ -1,0 +1,62 @@
+#
+# Copyright 2020 Tom van den Berg (TNO, The Netherlands).
+# SPDX-License-Identifier: Apache-2.0
+#
+
+#########################
+# Create Base image
+#########################
+FROM busybox AS base
+
+# Set default for build-time ARGs
+ARG VERSION=latest
+
+# Install Portico LRC files
+ADD portico/portico-${VERSION}-linux64.tar.gz /usr/local/portico/
+
+# LRC files are installed here
+ENV RTI_HOME=/usr/local/portico/portico-${VERSION}
+
+# Remove files
+RUN rm -rf \
+	${RTI_HOME}/jre \
+	${RTI_HOME}/*/jre \
+	${RTI_HOME}/documentation \
+	${RTI_HOME}/examples \
+	${RTI_HOME}/bin \
+	${RTI_HOME}/plugins \
+	${RTI_HOME}/etc
+
+#########################
+# Create Minimal image
+#########################
+FROM busybox
+
+# Set default for build-time ARGs
+ARG VERSION=latest
+
+# LRC files are installed here
+ENV RTI_HOME_FROM=/usr/local/portico/portico-${VERSION}
+ENV LRC_HOME=/usr/local/lrc
+ENV RTI_HOME=${LRC_HOME}/code
+
+# Copy LRC files
+COPY --from=base ${RTI_HOME_FROM} ${RTI_HOME}
+	
+# Copy launch scripts
+ADD portico/init.sh launch.sh ${LRC_HOME}/
+
+# Declare volume that can be mounted into other containers
+VOLUME ["${LRC_HOME}"]
+
+# Declare entrypoint to copy volume explicitly; needed in Kubernetes
+ENTRYPOINT [ "sh", "-c", " \
+   if [ -n \"$1\" ]; then \
+      if [ -n \"$OPTS\" ]; then \
+         cp $OPTS $LRC_HOME $1; \
+      else \
+         cp -a $LRC_HOME $1; \
+      fi; \
+      echo \"Copied $LRC_HOME to $1\"; \
+   fi" , \
+"--" ]

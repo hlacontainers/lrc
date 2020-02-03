@@ -1,0 +1,62 @@
+#
+# Copyright 2020 Tom van den Berg (TNO, The Netherlands).
+# SPDX-License-Identifier: Apache-2.0
+#
+
+#########################
+# Create Base image
+#########################
+FROM busybox AS base
+
+# Set default for build-time ARGs
+ARG VERSION=latest
+
+# Install Portico LRC files
+ADD portico/portico-${VERSION}-linux64.tar.gz /usr/local/portico/
+
+# LRC files are installed here
+ENV RTI_HOME=/usr/local/portico/portico-${VERSION}
+
+# Remove files
+RUN rm -rf \
+	${RTI_HOME}/jre \
+	${RTI_HOME}/*/jre \
+	${RTI_HOME}/documentation \
+	${RTI_HOME}/examples \
+	${RTI_HOME}/bin \
+	${RTI_HOME}/plugins \
+	${RTI_HOME}/etc
+
+#########################
+# Create Alpine image
+#########################
+FROM openjdk:8-alpine
+
+# Set default for build-time ARGs
+ARG VERSION=latest
+
+# LRC files are installed here
+ENV RTI_HOME_FROM=/usr/local/portico/portico-${VERSION}
+ENV LRC_HOME=/usr/local/lrc
+ENV RTI_HOME=${LRC_HOME}/code
+
+# Copy LRC files
+COPY --from=base ${RTI_HOME_FROM} ${RTI_HOME}
+
+# Copy launch scripts
+ADD portico/init.sh launch.sh ${LRC_HOME}/
+
+# Set common environment variables
+ENV LRC_CLASSPATH=${RTI_HOME}/lib/portico.jar
+ENV	LRC_LIBRARYPATH=${RTI_HOME}/lib/gcc4
+ENV	LD_LIBRARY_PATH=${LRC_LIBRARYPATH}:${LD_LIBRARY_PATH}
+ENV	CLASSPATH=${LRC_CLASSPATH}:${CLASSPATH}
+
+# Set entrypoint and ensure it is executable
+WORKDIR ${LRC_HOME}
+ENTRYPOINT ["/bin/sh", "./launch.sh"]
+RUN chmod a+x ./launch.sh
+
+# Set version from provided argument
+ARG VERSION_STRING
+ENV LRC_VERSION $VERSION_STRING
