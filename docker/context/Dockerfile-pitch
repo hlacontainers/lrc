@@ -4,13 +4,13 @@
 #
 
 # Set default for build-time ARGs
-ARG VERSION=latest
+ARG PITCH_VERSION=latest
 ARG REPOSITORY=hlacontainers/
 
 #########################
 # Create Base image
 #########################
-FROM ${REPOSITORY}pitch-crc:${VERSION} AS crc
+FROM ${REPOSITORY}pitch-crc:${PITCH_VERSION} AS crc
 
 #########################
 # Create Minimal image

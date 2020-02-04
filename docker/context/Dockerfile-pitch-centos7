@@ -4,13 +4,13 @@
 #
 
 # Set default for build-time ARGs
-ARG VERSION=latest
-ARG REPOSITORY=
+ARG PITCH_VERSION=latest
+ARG REPOSITORY=hlacontainers/
 
 #########################
 # Create Base image
 #########################
-FROM ${REPOSITORY}pitch-crc:${VERSION} AS crc
+FROM ${REPOSITORY}pitch-crc:${PITCH_VERSION} AS crc
 
 #########################
 # Create Centos7 image
@@ -52,5 +52,5 @@ ENTRYPOINT ["/bin/sh", "./launch.sh"]
 RUN chmod +x ./launch.sh
 
 # Declare build arguments
-ARG VERSION_STRING=latest
-ENV LRC_VERSION $VERSION_STRING
+ARG PITCH_VERSION_STRING=latest
+ENV LRC_VERSION $PITCH_VERSION_STRING
