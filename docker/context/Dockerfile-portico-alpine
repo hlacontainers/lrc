@@ -8,14 +8,13 @@
 #########################
 FROM busybox AS base
 
-# Set default for build-time ARGs
-ARG VERSION=latest
+ARG PORTICO_VERSION
 
 # Install Portico LRC files
-ADD portico/portico-${VERSION}-linux64.tar.gz /usr/local/portico/
+ADD portico/portico-${PORTICO_VERSION}-linux64.tar.gz /usr/local/portico/
 
 # LRC files are installed here
-ENV RTI_HOME=/usr/local/portico/portico-${VERSION}
+ENV RTI_HOME=/usr/local/portico/portico-${PORTICO_VERSION}
 
 # Remove files
 RUN rm -rf \
@@ -32,11 +31,10 @@ RUN rm -rf \
 #########################
 FROM openjdk:8-alpine
 
-# Set default for build-time ARGs
-ARG VERSION=latest
+ARG PORTICO_VERSION
 
 # LRC files are installed here
-ENV RTI_HOME_FROM=/usr/local/portico/portico-${VERSION}
+ENV RTI_HOME_FROM=/usr/local/portico/portico-${PORTICO_VERSION}
 ENV LRC_HOME=/usr/local/lrc
 ENV RTI_HOME=${LRC_HOME}/code
 
@@ -58,5 +56,5 @@ ENTRYPOINT ["/bin/sh", "./launch.sh"]
 RUN chmod a+x ./launch.sh
 
 # Set version from provided argument
-ARG VERSION_STRING
-ENV LRC_VERSION $VERSION_STRING
+ARG PORTICO_VERSION_STRING
+ENV LRC_VERSION $PORTICO_VERSION_STRING

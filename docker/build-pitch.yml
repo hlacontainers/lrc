@@ -7,8 +7,8 @@ services:
    context: context
    dockerfile: Dockerfile-pitch-alpine
    args:
-   - VERSION=${PITCH_VERSION}
-   - VERSION_STRING=pitch-lrc:${PITCH_VERSION}-alpine
+   - PITCH_VERSION=${PITCH_VERSION}
+   - PITCH_VERSION_STRING=pitch-lrc:${PITCH_VERSION}-alpine
    - REPOSITORY=${REPOSITORY}
   image: ${REPOSITORY}pitch-lrc:${PITCH_VERSION}-alpine
 
@@ -17,8 +17,8 @@ services:
    context: context
    dockerfile: Dockerfile-pitch-debian
    args:
-   - VERSION=${PITCH_VERSION}
-   - VERSION_STRING=pitch-lrc:${PITCH_VERSION}-debian
+   - PITCH_VERSION=${PITCH_VERSION}
+   - PITCH_VERSION_STRING=pitch-lrc:${PITCH_VERSION}-debian
    - REPOSITORY=${REPOSITORY}
   image: ${REPOSITORY}pitch-lrc:${PITCH_VERSION}-debian
 
@@ -27,8 +27,8 @@ services:
    context: context
    dockerfile: Dockerfile-pitch-centos7
    args:
-   - VERSION=${PITCH_VERSION}
-   - VERSION_STRING=pitch-lrc:${PITCH_VERSION}-centos7
+   - PITCH_VERSION=${PITCH_VERSION}
+   - PITCH_VERSION_STRING=pitch-lrc:${PITCH_VERSION}-centos7
    - REPOSITORY=${REPOSITORY}
   image: ${REPOSITORY}pitch-lrc:${PITCH_VERSION}-centos7
 
@@ -37,7 +37,7 @@ services:
    context: context
    dockerfile: Dockerfile-pitch
    args:
-   - VERSION=${PITCH_VERSION}
-   - VERSION_STRING=pitch-lrc:${PITCH_VERSION}
+   - PITCH_VERSION=${PITCH_VERSION}
+   - PITCH_VERSION_STRING=pitch-lrc:${PITCH_VERSION}
    - REPOSITORY=${REPOSITORY}
   image: ${REPOSITORY}pitch-lrc:${PITCH_VERSION}
