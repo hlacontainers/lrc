@@ -3,18 +3,19 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-ARG VERSION
-ARG REPOSITORY
+# Set default for build-time ARGs
+ARG VTMAK_VERSION=latest
+ARG REPOSITORY=hlacontainer/
 
 #########################
 # Create Base image
 #########################
-FROM ${REPOSITORY}vtmak-rtiexec:${VERSION} AS base
+FROM ${REPOSITORY}vtmak-rtiexec:${VTMAK_VERSION} AS base
 
-ARG VERSION
+ARG VTMAK_VERSION
 
 # LRC files are installed here
-ENV RTI_HOME=/usr/local/makRti${VERSION}
+ENV RTI_HOME=/usr/local/makRti${VTMAK_VERSION}
 
 # Remove lib files we do not need in the next stage
 RUN rm -rf $RTI_HOME/lib/gui
@@ -27,10 +28,10 @@ RUN find $RTI_HOME/bin -type f -not -name '*.xml' -delete
 #########################
 FROM centos:7
 
-ARG VERSION
+ARG VTMAK_VERSION
 
 # LRC files are installed here
-ENV RTI_HOME_FROM=/usr/local/makRti${VERSION}
+ENV RTI_HOME_FROM=/usr/local/makRti${VTMAK_VERSION}
 ENV LRC_HOME=/usr/local/lrc
 ENV RTI_HOME=${LRC_HOME}/code
 
