@@ -6,6 +6,7 @@
 # Set default for build-time ARGs
 ARG VTMAK_VERSION=latest
 ARG REPOSITORY=hlacontainer/
+ARG VTMAK_VERSION_STRING=vtmak-lrc:latest-centos7
 
 #########################
 # Create Base image
@@ -54,9 +55,9 @@ ENV RTI_RID_FILE=${RTI_HOME}/rid.mtl
 
 # Set common environment variables
 ENV LRC_CLASSPATH=${RTI_HOME}/lib/hla.jar
-ENV	LRC_LIBRARYPATH=${RTI_HOME}/lib/java:${RTI_HOME}/lib
-ENV	LD_LIBRARY_PATH=${LRC_LIBRARYPATH}:${LD_LIBRARY_PATH}
-ENV	CLASSPATH=${LRC_CLASSPATH}:${CLASSPATH}
+ENV LRC_LIBRARYPATH=${RTI_HOME}/lib/java:${RTI_HOME}/lib
+ENV LD_LIBRARY_PATH=${LRC_LIBRARYPATH}:${LD_LIBRARY_PATH}
+ENV CLASSPATH=${LRC_CLASSPATH}:${CLASSPATH}
 
 # Do not start the assistant
 ENV RTI_ASSISTANT_DISABLE=1
