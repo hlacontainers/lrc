@@ -3,6 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# Set default for build-time ARGs
+ARG PORTICO_VERSION=latest
+
 #########################
 # Create Base image
 #########################
