@@ -15,9 +15,9 @@ For the instructions to build the LRC container images see [BUILDME](BUILDME.md)
 ## Container synopsis
 
 ````
-<vendor>-lrc:<version>-<platform> <options>
+lrc:<vendor>-<version>-<platform> <options>
 
-<vendor>-lrc:<version> <options>
+lrc:<vendor>-<version> <options>
 ````
 
 Where:
@@ -25,16 +25,16 @@ Where:
 - `<vendor>` is **pitch**, **portico** or **vtmak**,
 - `<version>` is the LRC version, and
 
-- `<platform>` is **alpine**, **debian** or **centos**.
+- `<platform>` is **alpine**, **debian** or **centos7**.
 
 The container `<options>` are passed on to the federate application. In principle, command line options are federate application specific.
 
 Specific notes on images:
 
-- `<vendor>-lrc:<version>-<platform>`: These images include Open JDK (version 8). 
-- `<vendor>-lrc:<version>-alpine`. The alpine images do not include C++ libraries.
+- `lrc:<vendor>-<version>-<platform>`: These images include Open JDK. 
+- `lrc:<vendor>-<version>-alpine`. The alpine images do not include C++ libraries.
 
-- `<vendor>-lrc:<version>`. These images do not include an Open JDK. The purpose of these minimal images is that they can be mounted into the application container (see composition pattern).
+- `lrc:<vendor>-<version>`. These images do not include Open JDK. The purpose of these minimal images is that they can be mounted into the application container (see composition pattern).
 
 ## Settings
 
