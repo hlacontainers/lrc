@@ -46,6 +46,7 @@ COPY --from=base ${RTI_HOME_FROM} ${RTI_HOME}
 	
 # Copy launch scripts
 ADD portico/init.sh launch.sh ${LRC_HOME}/
+RUN chmod +x ./launch.sh
 
 # Declare volume that can be mounted into other containers
 VOLUME ["${LRC_HOME}"]
