@@ -31,7 +31,7 @@ COPY --from=crc /root/prti1516e/prti1516e.logging ${RTI_HOME}
 
 # Copy launch scripts
 ADD pitch/init.sh launch.sh ${LRC_HOME}/
-RUN chmod +x ./launch.sh
+RUN chmod +x ${LRC_HOME}/launch.sh
 
 # Declare volume that can be mounted into other containers
 VOLUME ["${LRC_HOME}"]
