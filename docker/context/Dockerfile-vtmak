@@ -4,8 +4,8 @@
 #
 
 # Set default for build-time ARGs
-ARG VTMAK_VERSION=latest
 ARG REPOSITORY=hlacontainers/
+ARG VTMAK_VERSION=4.5
 
 #########################
 # Create Base image
@@ -24,9 +24,9 @@ RUN rm -f $RTI_HOME/lib/libRTI-NG_64.so
 RUN find $RTI_HOME/bin -type f -not -name '*.xml' -delete
 
 #########################
-# Create Centos7 image
+# Create Minimal image
 #########################
-FROM centos:7
+FROM busybox
 
 ARG VTMAK_VERSION
 

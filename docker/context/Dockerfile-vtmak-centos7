@@ -4,9 +4,9 @@
 #
 
 # Set default for build-time ARGs
-ARG VTMAK_VERSION=latest
 ARG REPOSITORY=hlacontainers/
-ARG VTMAK_VERSION_STRING=vtmak-lrc:latest-centos7
+ARG VTMAK_VERSION=4.5
+ARG VTMAK_VERSION_STRING=lrc:vtmak-${VTMAK_VERSION}-centos7
 
 #########################
 # Create Base image
