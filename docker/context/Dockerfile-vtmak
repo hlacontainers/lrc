@@ -5,7 +5,7 @@
 
 # Set default for build-time ARGs
 ARG VTMAK_VERSION=latest
-ARG REPOSITORY=hlacontainer/
+ARG REPOSITORY=hlacontainers/
 
 #########################
 # Create Base image
