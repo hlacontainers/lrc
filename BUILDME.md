@@ -62,7 +62,7 @@ services:
   - DISPLAY=${DISPLAY}
 
  app:
-  image: ${REPOSITORY}start:pi-alpine
+  image: ${REPOSITORY}start:pitch-alpine
   volumes:
   - ${RTI_HOME}:/usr/local/lrc/code
   environment:
