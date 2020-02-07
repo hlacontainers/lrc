@@ -170,7 +170,7 @@ services:
   - lrc
 
  lrc:
-  image: pitch-lrc:5.5.0.0
+  image: lrc:pitch-5.5.0.0
   volumes:
   - mylrc:/usr/local/lrc
 
