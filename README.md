@@ -1,6 +1,8 @@
 # LRC image
 
-The Local RTI Component (LRC) image includes the LRC libraries and enables several standard approaches to the containerization of an HLA federate application, regardless what RTI vendor or platform is used. The three approaches - design patterns - for the containerization of HLA federate applications using an LRC image are described in the section [LRC containerization patterns](docs/lrc.md). The patterns are named:
+The Local RTI Component (LRC) is a set of C++ and Java libraries that federate applications must use to communicate with the RTI. The API of the libraries is standardized, but the implementation of the libraries is RTI (vendor) specific. Depending on what RTI implementation is used, a central component (Pitch CRC or VTMaK RTI Executive) is required for the execution of a federation.
+
+Several LRC container images are available for different RTI vendors and Linux platforms. The LRC container image enables several standard approaches to the containerization of an HLA federate application, regardless what RTI vendor or platform is used. The three approaches - design patterns - for the containerization of HLA federate applications using an LRC image are described in the section [LRC containerization patterns](docs/lrc.md). The patterns are named:
 
 * Containerization via extension;
 * Containerization via composition of the application;
@@ -10,7 +12,9 @@ The LRC and HLA federate application must be combined to become an executable ap
 
 The patterns are initially described in the paper titled [Guidelines and best practices for using Docker in support of HLA federations](https://www.sisostds.org/DigitalLibrary.aspx?Command=Core_Download&EntryId=44931) (SISO Simulation Innovation Workshop, 2016, paper number 31).
 
-For the instructions to build the LRC container images see [BUILDME](BUILDME.md).
+By default a **skeleton** Docker container image is built from the files in this repository. A skeleton container image does not include any vendor proprietary files. Depending on the pattern used these files must be mounted into the application or LRC container at run-time in order to create a functional application.
+
+For the instructions to build a skeleton or a complete LRC container image see [BUILDME](BUILDME.md).
 
 ## Container synopsis
 
