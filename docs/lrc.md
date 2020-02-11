@@ -31,7 +31,7 @@ As an example, consider building a federate application image based on `pitch/lr
 The Dockerfile for building the federate application image looks as follows:
 
 ````
-FROM pitch-lrc:5.5.0.0-alpine
+FROM lrc:pitch-5.5.0.0-alpine
 
 # Install application
 COPY ./application /root/application
@@ -42,7 +42,7 @@ ENV LRC_ENTRYPOINT=/root/application/start.sh
 
 This Dockerfile does the following three things:
 
-- It sets the base image to `pitch-lrc:5.5.0.0-alpine`
+- It sets the base image to `lrc:pitch-5.5.0.0-alpine`
 - It copies the application directory, containing the federate application, to the filesystem of the container
   at /root/application
 - It defines the environment variable `LRC_ENTRYPOINT`, setting it to the name of a shell script that is used to start the federate application (in this example `start.sh`)
@@ -118,7 +118,7 @@ services:
   - myapp:/root/application
 
  myservice:
-  image: pitch-lrc:5.5.0.0-alpine
+  image: lrc:pitch-5.5.0.0-alpine
   volumes:
   - myapp:/root/application:nocopy
   environment:
@@ -138,7 +138,7 @@ This Docker Compose fragment shows two service definitions:
 
 In `myservice` the following is done:
 
-- the LRC image is specified, in this example `pitch-lrc:5.5.0.0-alpine`,
+- the LRC image is specified, in this example `lrc:pitch-5.5.0.0-alpine`,
 
 - the federate application logic from `myapplication` is mounted, and
 
@@ -170,7 +170,7 @@ services:
   - lrc
 
  lrc:
-  image: pitch-lrc:5.5.0.0
+  image: lrc:pitch-5.5.0.0
   volumes:
   - mylrc:/usr/local/lrc
 
