@@ -27,7 +27,7 @@ instruction. The `FROM` instruction sets the base image for the federate applica
 
 <img src="ExtensionPattern.png" style="zoom:75%" />
 
-As an example, consider building a federate application image based on `pitch/lrc:5.5.0.0-alpine`, a small image based on Alpine Linux, with Pitch LRC version 5.5.0.0 and Java Runtime Engine 8 installed.
+As an example, consider building a federate application image based on `lrc:pitch-5.5.0.0-alpine`, a small image based on Alpine Linux, with Pitch LRC version 5.5.0.0 and Java Runtime Engine 8 installed.
 The Dockerfile for building the federate application image looks as follows:
 
 ````
