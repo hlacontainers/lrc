@@ -2,7 +2,7 @@
 
 The LRC images for Pitch and VTMaK are built from the Pitch CRC and VTMaK RTI Executable images respectively. **These images must be built first**.
 
-If the Pitch CRC and VTMaK RTI Executable images are **skeleton** images then the LRC images build from these are **skeleton** LRC images. A skeleton image only contains a skeleton directory structure and some relevant (but empty) files, but not the actual LRC files. These need to be mounted afterwards at run time. The build steps for creating these images are identical.
+If the Pitch CRC and VTMaK RTI Executable images are **skeleton** images then the LRC images build from these will be **skeleton** LRC images. A skeleton image only contains a skeleton directory structure and some relevant (but empty) files, but not the actual LRC files. These need to be mounted afterwards at run time. The build steps for creating these images are identical.
 
 Perform the following steps to build the LRC images.
 
@@ -14,7 +14,7 @@ Clone this Git repository to the directory named `${WORKDIR}`.
 
 Change into the directory `${WORKDIR}/lrc/docker`.
 
-Check and if needed adapt the environment variable settings in the file `.env`. Make sure that the RTI version number matches. For example, for VTMaK the RTI version should be e.g. `4.5` or `4.5f`.
+Check and if needed adapt the environment variable settings in the file `.env`. For Pitch or VTMaK make sure that the RTI version number matches with the Pitch CRC or VTMaK RTI.
 
 Next, build the LRC container images with:
 
@@ -32,19 +32,7 @@ The Portico library is included under the portico directory.
 
 # Mount LRC files from host file system
 
-If a skeleton LRC image is used then the  LRC files must be mounted from the host file system in order to create a functional LRC container.
-
-This can be accomplished, based on the following assumptions:
-
-- the LRC library files are installed on the host filesystem at `${RTI_HOME}/lib`;
-
-- the LRC include files are installed on the host filesystem at `${RTI_HOME}/include`;
-
-- and the RID file is installed under `${RTI_HOME}`.
-
-These assumptions are satisfied if the standard installation instructions are followed for the RTI, and the RTI is installed under `${RTI_HOME}`.
-
-The mount point of the LRC in the container is `/usr/local/lrc/code`. For the Pitch RTI the docker compose file may look like:
+If a skeleton LRC image is used then the LRC files must be mounted from the host file system in order to create a functional LRC container. The is easily accomplished by installing the (Pitch or VTMaK) RTI under `${RTI_HOME}` and mount this directory in the container. The mount point of the LRC in the container is `/usr/local/lrc/code`. For the Pitch RTI the docker compose file may look like:
 
 `````
 version: '3'
@@ -57,7 +45,8 @@ services:
   
  crc:
   image: ${REPOSITORY}pitch-crc:${PITCH_VERSION}
-  mac_address: ${MAC_ADDRESS}
+  volumes:
+  - ${RTI_HOME}:/usr/local/prti1516e
   environment:
   - DISPLAY=${DISPLAY}
 

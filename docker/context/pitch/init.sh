@@ -120,14 +120,18 @@ initEnvironmentVars() {
 	# Pitch expects settings files under /root/prti1516e
 	mkdir -p /root/prti1516e
 
-	if [ "/root/prti1516e/prti1516eLRC.settings" != "${PITCH_LRC_SETTINGS_FILE}" ]; then
-		cp ${PITCH_LRC_SETTINGS_FILE} /root/prti1516e
+	if [ -f "${PITCH_LRC_SETTINGS_FILE}" ]; then
+		if [ "${PITCH_LRC_SETTINGS_FILE}" != "/root/prti1516e/prti1516eLRC.settings" ]; then
+			cp ${PITCH_LRC_SETTINGS_FILE} /root/prti1516e
+		fi
 	fi
 
-	if [ "/root/prti1516e/prti1516e.logging" != "${PITCH_LRC_LOGGING_FILE}" ]; then
-		cp ${PITCH_LRC_LOGGING_FILE} /root/prti1516e
+	if [ -f "${PITCH_LRC_LOGGING_FILE}" ]; then
+		if [ "${PITCH_LRC_LOGGING_FILE}" != "/root/prti1516e/prti1516e.logging" ]; then
+			cp ${PITCH_LRC_LOGGING_FILE} /root/prti1516e
+		fi
 	fi
-	
+
 	PITCH_LRC_SETTINGS_FILE=/root/prti1516e/prti1516eLRC.settings
 	PITCH_LRC_LOGGING_FILE=/root/prti1516e/prti1516e.logging
 }

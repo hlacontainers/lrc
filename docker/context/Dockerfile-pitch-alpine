@@ -5,7 +5,7 @@
 
 # Set default for build-time ARGs
 ARG REPOSITORY=hlacontainers/
-ARG PITCH_VERSION=free_5_4_5_0
+ARG PITCH_VERSION=skeleton
 ARG PITCH_VERSION_STRING=lrc:pitch-${PITCH_VERSION}-alpine
 
 #########################
@@ -19,12 +19,13 @@ FROM ${REPOSITORY}pitch-crc:${PITCH_VERSION} AS crc
 FROM openjdk:8-alpine
 
 # LRC files are installed here
+ARG RTI_HOME_FROM=/usr/local/prti1516e
 ENV LRC_HOME=/usr/local/lrc
 ENV RTI_HOME=${LRC_HOME}/code
 
 # Copy LRC files
-COPY --from=crc /usr/local/prti1516e/include ${RTI_HOME}/include
-COPY --from=crc /usr/local/prti1516e/lib ${RTI_HOME}/lib
+COPY --from=crc ${RTI_HOME_FROM}/include ${RTI_HOME}/include
+COPY --from=crc ${RTI_HOME_FROM}/lib ${RTI_HOME}/lib
 
 # Copy LRC setting files
 COPY --from=crc /root/prti1516e/prti1516eLRC.settings ${RTI_HOME}

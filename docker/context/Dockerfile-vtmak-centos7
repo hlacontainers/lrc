@@ -5,7 +5,7 @@
 
 # Set default for build-time ARGs
 ARG REPOSITORY=hlacontainers/
-ARG VTMAK_VERSION=4.5
+ARG VTMAK_VERSION=skeleton
 ARG VTMAK_VERSION_STRING=lrc:vtmak-${VTMAK_VERSION}-centos7
 
 #########################
@@ -13,10 +13,8 @@ ARG VTMAK_VERSION_STRING=lrc:vtmak-${VTMAK_VERSION}-centos7
 #########################
 FROM ${REPOSITORY}vtmak-rtiexec:${VTMAK_VERSION} AS base
 
-ARG VTMAK_VERSION
-
 # LRC files are installed here
-ENV RTI_HOME=/usr/local/makRti${VTMAK_VERSION}
+ENV RTI_HOME=/usr/local/makRti
 
 # Remove lib files we do not need in the next stage
 RUN rm -rf $RTI_HOME/lib/gui
@@ -29,15 +27,13 @@ RUN find $RTI_HOME/bin -type f -not -name '*.xml' -delete
 #########################
 FROM centos:7
 
-ARG VTMAK_VERSION
-
 # Install Java
 RUN yum update -y \
 	&& yum install -y java-1.8.0-openjdk nc iproute \
 	&& yum clean all
 
 # LRC files are installed here
-ENV RTI_HOME_FROM=/usr/local/makRti${VTMAK_VERSION}
+ARG RTI_HOME_FROM=/usr/local/makRti
 ENV LRC_HOME=/usr/local/lrc
 ENV RTI_HOME=${LRC_HOME}/code
 
