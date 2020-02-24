@@ -53,6 +53,10 @@ if [ -f "${RTI_RID_FILE}" ]; then
 		sed -i "s/^.*portico.loglevel.*/portico.loglevel = $PORTICO_LOGLEVEL/" $RTI_RID_FILE
 	fi
 
+	if [ -n "$PORTICO_JGROUPS_LOGLEVEL" ]; then
+		sed -i "s/^.*portico.jgroups.loglevel.*/portico.jgroups.loglevel = $PORTICO_JGROUPS_LOGLEVEL/" $RTI_RID_FILE
+	fi
+
 	if [ -n "$PORTICO_UNIQUEFEDERATENAMES" ]; then
 		sed -i "s/^.*portico.uniqueFederateNames.*/portico.uniqueFederateNames = $PORTICO_UNIQUEFEDERATENAMES/" $RTI_RID_FILE
 	fi

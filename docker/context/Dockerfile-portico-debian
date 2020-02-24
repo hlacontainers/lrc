@@ -5,7 +5,7 @@
 
 # Set default for build-time ARGs
 ARG PORTICO_VERSION=nightly-2016.05.28
-ARG PORTICO_VERSION_STRING=lrc:portico-${PORTICO_VERSION}-centos7
+ARG PORTICO_VERSION_STRING=lrc:portico-${PORTICO_VERSION}-debian
 
 #########################
 # Create Base image
