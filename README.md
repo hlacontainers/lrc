@@ -12,9 +12,9 @@ The LRC and HLA federate application must be combined to become an executable ap
 
 The patterns are initially described in the paper titled [Guidelines and best practices for using Docker in support of HLA federations](https://www.sisostds.org/DigitalLibrary.aspx?Command=Core_Download&EntryId=44931) (SISO Simulation Innovation Workshop, 2016, paper number 31).
 
-By default a **skeleton** Docker container image is built from the files in this repository. A skeleton container image does not include any vendor proprietary files. Depending on the pattern used these files must be mounted into the application or LRC container at run-time in order to create a functional application.
+For some RTIs a **skeleton** Docker container image is built from the files in this repository. A skeleton container image does not include any vendor proprietary files. Depending on the pattern used these files must be mounted into the application or LRC container at run-time in order to create a functional application. A skeleton image can be recognized via its tag.
 
-For the instructions to build a skeleton or a complete LRC container image see [BUILDME](BUILDME.md).
+For the instructions to build an LRC container image see [BUILDME](BUILDME.md).
 
 ## Container synopsis
 

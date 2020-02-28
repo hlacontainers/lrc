@@ -2,7 +2,7 @@
 
 The LRC images for Pitch and VTMaK are built from the Pitch CRC and VTMaK RTI Executable images respectively. **These images must be built first**.
 
-If the Pitch CRC and VTMaK RTI Executable images are **skeleton** images then the LRC images build from these will be **skeleton** LRC images. A skeleton image only contains a skeleton directory structure and some relevant (but empty) files, but not the actual LRC files. These need to be mounted afterwards at run time. The build steps for creating these images are identical.
+If the Pitch CRC image or VTMaK RTI Executive image is a **skeleton** images then the LRC images build from these will be **skeleton** LRC images. A skeleton image only contains a skeleton directory structure and some relevant (but empty) files, but not the actual LRC files. These need to be mounted afterwards at run time. The build steps for creating these images are identical. A skeleton image can be recognized by its tag.
 
 Perform the following steps to build the LRC images.
 
