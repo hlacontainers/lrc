@@ -2,7 +2,7 @@
 
 The LRC images for Pitch and VTMaK are built from the Pitch CRC and VTMaK RTI Executable images respectively. **These images must be built first**.
 
-If the Pitch CRC image or VTMaK RTI Executive image is a **skeleton** images then the LRC images build from these will be **skeleton** LRC images. A skeleton image only contains a skeleton directory structure and some relevant (but empty) files, but not the actual LRC files. These need to be mounted afterwards at run time. The build steps for creating these images are identical. A skeleton image can be recognized by its tag.
+If the Pitch CRC image or VTMaK RTI Executive image is a **skeleton** image then the LRC images build from these will be **skeleton** LRC images. A skeleton image only contains a skeleton directory structure and some relevant (but empty) files, but not the actual LRC files. These need to be mounted afterwards at run time. The build steps for creating these images are identical. A skeleton image can be recognized by its tag.
 
 Perform the following steps to build the LRC images.
 
@@ -26,9 +26,9 @@ docker-compose -f build-vtmak.yml build
 docker-compose -f build-portico.yml build
 ````
 
-The Pitch and VTMaK LRC images derive the vendor proprietary libraries from the Pitch CRC and VTMaK RTI Executable images respectively. No Pitch or VTMaK proprietary libraries are included in this repository.
+The Pitch and VTMaK LRC images derive the vendor proprietary files from the Pitch CRC and VTMaK RTI Executive images respectively. No Pitch or VTMaK proprietary files are included in this repository.
 
-The Portico library is included under the portico directory.
+The Portico proprietary library is included under the portico directory.
 
 # Mount LRC files from host file system
 
