@@ -7,7 +7,7 @@
 
 SplitAdvertisedAddress() {
 	#split address
-	#Format: <HOST>:<TCPMIN>-<TCPMAX>:<UDPMIN>-<UDPMAX>
+	#Format: <HOST> [:<TCPMIN>[-<TCPMAX>] [: <UDPMIN>[-<UDPMAX>] ] ]
 	OLDIFS=$IFS
 	PITCH_ADV_ADDRESS=$1
 	IFS=:
@@ -23,6 +23,12 @@ SplitAdvertisedAddress() {
 	PITCH_ADV_UDPMIN=$1
 	PITCH_ADV_UDPMAX=$2
 	IFS=$OLDIFS
+	
+	# Set defaults
+	X=${PITCH_ADV_TCPMIN:=6000}
+	X=${PITCH_ADV_TCPMAX:=$((PITCH_ADV_TCPMIN+1))}
+	X=${PITCH_ADV_UDPMIN:=$((PITCH_ADV_TCPMAX))}
+	X=${PITCH_ADV_UDPMAX:=$((PITCH_ADV_UDPMIN+PITCH_ADV_TCPMAX-PITCH_ADV_TCPMIN))}
 }
 
 GetNetworkInterface() {
@@ -46,27 +52,8 @@ GetNetworkInterface() {
 	# get the interface used to reach the specific host/IP.
 	NETIF=$(ip route get "$HOSTIP" | head -1 | sed -e 's/^.* dev \([^ ]*\) .*$/\1/')
 
-	echo "LRC: Found interface $NETIF for host $HOSTNAME with IP address $HOSTIP"	
-}
-
-# Figure out what network adapter to use
-GetAdapter() {
-	if [ -z "$PITCH_BOOSTHOST" ]; then
-		GetNetworkInterface $PITCH_CRCHOST
-		
-		if [ -z "${PITCH_LRCADAPTER}" ]; then
-			if [ -n "$NETIF" ]; then
-				PITCH_LRCADAPTER=$NETIF
-			fi
-		fi
-	else
-		GetNetworkInterface $PITCH_BOOSTHOST
-			
-		if [ -z "${PITCH_BOOSTERADAPTER}" ]; then
-			if [ -n "$NETIF" ]; then
-				PITCH_BOOSTERADAPTER=$NETIF
-			fi
-		fi
+	if [ -n "${LRC_DEBUG}" ]; then
+		echo "LRC: Found interface $NETIF for host $HOSTNAME with IP address $HOSTIP"	
 	fi
 }
 
@@ -142,14 +129,10 @@ initEnvironmentVars
 if [ -f "${PITCH_LRC_SETTINGS_FILE}" ]; then
 	SplitCRCAddress $PITCH_CRCADDRESS
 
-	if [ -z "$PITCH_CRCHOST" ]; then
-		PITCH_CRCHOST="crc"
-	fi		
-	if [ -z "$PITCH_CRCPORT" ]; then
-		PITCH_CRCPORT="8989"
-	fi
-
 	if [ -n "$PITCH_BOOSTHOST" ]; then
+		if [ -z "$PITCH_CRCHOST" ]; then
+			PITCH_CRCHOST="crc"
+		fi		
 		if [ -z "$PITCH_BOOSTPORT" ]; then
 			PITCH_BOOSTPORT="8688"
 		fi
@@ -157,10 +140,16 @@ if [ -f "${PITCH_LRC_SETTINGS_FILE}" ]; then
 		PITCH_MASTERADDRESS=${PITCH_BOOSTHOST}:${PITCH_BOOSTPORT}
 
 		# Only determine the adapter when we have waited for the master to be up
-		if [ -n "$LRC_MASTERADDRESS" -a "$LRC_MASTERADDRESS" = "$PITCH_MASTERADDRESS" ]; then
-			GetAdapter
+		if [ "$LRC_MASTERADDRESS" = "$PITCH_MASTERADDRESS" ]; then
+			if [ -z "${PITCH_LRCADAPTER}" ]; then
+				GetNetworkInterface $PITCH_BOOSTHOST
+				PITCH_LRCADAPTER=$NETIF
+			fi
 		fi
-	elif [ -n "$PITCH_CRCHOST" ]; then
+	else
+		if [ -z "$PITCH_CRCHOST" ]; then
+			PITCH_CRCHOST="crc"
+		fi		
 		if [ -z "$PITCH_CRCPORT" ]; then
 			PITCH_CRCPORT="8989"
 		fi
@@ -168,32 +157,46 @@ if [ -f "${PITCH_LRC_SETTINGS_FILE}" ]; then
 		PITCH_MASTERADDRESS=${PITCH_CRCHOST}:${PITCH_CRCPORT}
 
 		# Only determine the adapter when we have waited for the master to be up
-		if [ -n "$LRC_MASTERADDRESS" -a "$LRC_MASTERADDRESS" = "$PITCH_MASTERADDRESS" ]; then
-			GetAdapter
+		if [ "$LRC_MASTERADDRESS" = "$PITCH_MASTERADDRESS" ]; then
+			if [ -z "${PITCH_LRCADAPTER}" ]; then
+				GetNetworkInterface $PITCH_CRCHOST
+				PITCH_LRCADAPTER=$NETIF
+			fi		
 		fi
-	else
-		PITCH_CRCADDRESS=""
-		PITCH_MASTERADDRESS=""
+	fi
+
+	if [ -n "${LRC_DEBUG}" ]; then
+		echo "LRC: Set crcAddress to ${PITCH_CRCADDRESS}"
 	fi
 
 	# Set the CRC address 
-	if [ -n "$PITCH_CRCADDRESS" ]; then
-		sed -i "s/crcAddress.*/crcAddress=$PITCH_CRCADDRESS/" $PITCH_LRC_SETTINGS_FILE
-	fi
+	sed -i "s/crcAddress.*/crcAddress=$PITCH_CRCADDRESS/" $PITCH_LRC_SETTINGS_FILE
 
 	# Set the LRC Adapter 
 	if [ -n "$PITCH_LRCADAPTER" ]; then
 		sed -i "s/LRC.adapter.*/LRC.adapter=$PITCH_LRCADAPTER/" $PITCH_LRC_SETTINGS_FILE
+
+		if [ -n "${LRC_DEBUG}" ]; then
+			echo "LRC: Set LRC.adapter to ${PITCH_LRCADAPTER}"
+		fi
 	fi
 
 	# Set the Booster Adapter 
 	if [ -n "$PITCH_BOOSTERADAPTER" ]; then
 		sed -i "s/Booster.adapter.*/Booster.adapter=$PITCH_BOOSTERADAPTER/" $PITCH_LRC_SETTINGS_FILE
+
+		if [ -n "${LRC_DEBUG}" ]; then
+			echo "LRC: Set Booster.adapter to ${PITCH_BOOSTERADAPTER}"
+		fi
 	fi
 
 	# Set the LRC advertise address 
 	if [ -n "${PITCH_ADVERTISE_ADDRESS}" ]; then
 		SplitAdvertisedAddress $PITCH_ADVERTISE_ADDRESS
+		
+		if [ -n "${LRC_DEBUG}" ]; then
+			echo "LRC: Set advertise host and port ranges to ${PITCH_ADV_HOST}:${PITCH_ADV_TCPMIN}-${PITCH_ADV_TCPMAX}:${PITCH_ADV_UDPMIN}-${PITCH_ADV_UDPMAX}"
+		fi
 	
 		if [ -n "$PITCH_ADV_HOST" ]; then
 			sed -i "s/LRC.TCP.advertise.mode.*/LRC.TCP.advertise.mode=User/" $PITCH_LRC_SETTINGS_FILE
@@ -221,6 +224,10 @@ if [ -f "${PITCH_LRC_SETTINGS_FILE}" ]; then
 	if [ -n "${PITCH_BOOSTER_ADVERTISE_ADDRESS}" ]; then
 		SplitAdvertisedAddress $PITCH_BOOSTER_ADVERTISE_ADDRESS
 	
+		if [ -n "${LRC_DEBUG}" ]; then
+			echo "LRC: Set advertise data to ${PITCH_ADV_HOST}:${PITCH_ADV_TCPMIN}-${PITCH_ADV_TCPMAX}:${PITCH_ADV_UDPMIN}-${PITCH_ADV_UDPMAX}"
+		fi
+
 		if [ -n "$PITCH_ADV_HOST" ]; then
 			sed -i "s/LRC.booster.advertise.mode.*/LRC.booster.advertise.mode=User/" $PITCH_LRC_SETTINGS_FILE
 			sed -i "s/LRC.booster.advertise.address.*/LRC.booster.advertise.address=$PITCH_ADV_HOST/" $PITCH_LRC_SETTINGS_FILE

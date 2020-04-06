@@ -35,10 +35,14 @@ The container `<options>` are passed on to the federate application. In principl
 
 Specific notes on images:
 
-- `lrc:<vendor>-<version>-<platform>`: These images include Open JDK. 
-- `lrc:<vendor>-<version>-alpine`. The alpine images do not include C++ libraries.
+- `lrc:<vendor>-<version>-<platform>`
+  - Use for the extension pattern.
+  - Includes Open JDK. 
+  - The alpine platform images do not include C++ libraries.
 
-- `lrc:<vendor>-<version>`. These images do not include Open JDK. The purpose of these minimal images is that they can be mounted into the application container (see composition pattern).
+- `lrc:<vendor>-<version>`.
+  - Use for the composition pattern.
+  - These images do not include Open JDK. The purpose of these minimal images is that they can be mounted into the application container.
 
 ## Settings
 
@@ -67,6 +71,7 @@ LRC settings are environment variables used to configure and control the behavio
 | ``LRC_ENTRYPOINT``    | Shell script to start the federate application.              | Container exit           |
 | ``LRC_MASTERADDRESS`` | Master hostname and port number as ``<hostname>:<port>``.    | No master address        |
 | ``LRC_SLEEPPERIOD``   | Sleep period in seconds before starting the federate application; format ``<min>[:<max>]``. If a max is specified then a random value between min and max is used as actual sleep period. | No sleep period          |
+| `LRC_DEBUG`           | Print debug information. Set to a non-empty value to enable. | No debug.                |
 
 If ``LRC_MASTERADDRESS`` is set to a non-empty string (in the format specified), then the container attempts to connect to the provided master address before starting the federate application defined in ``LRC_ENTRYPOINT``. The design pattern is that a master container bootstraps on a master host, creates/joins the federation execution, and opens the master port when ready. Once the port is open, other containers (based on the LRC image) that waited for the master component can then start the federate application. For the Pitch LRC image the Pitch CRC can serve as the master; for the VTMaK LRC image the RTI Executable can serve as master. If `LRC_MASTERADDRESS` is unset or is set to an empty string then no attempt is made to connect to a master address; this is the default behavior.
 
@@ -93,7 +98,12 @@ docker run \
 	yourApplicationImagename
 ````
 
+If only the advertise address is specified, then the port range defaults to `6000-6001:6001-6002`.
+
+If only the advertise address and the TCP port range are specified, then the UDP port range defaults to `<maxtcpport> .. <maxtcpport>+<maxtcpport>-<mintcpport>`.
+
 ### Portico LRC settings
+
 | Environment variable            | Description                                                  | Default if not specified     |
 | ------------------------------- | ------------------------------------------------------------ | ---------------------------- |
 | ``PORTICO_RTI_RID_FILE``        | File system path to the RID file.                            | ``${LRC_HOME}/code/RTI.rid`` |
