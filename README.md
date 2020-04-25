@@ -1,4 +1,5 @@
 ![Build Status](https://img.shields.io/docker/cloud/build/hlacontainers/lrc)
+![Pull](https://img.shields.io/docker/pulls/hlacontainers/lrc)
 
 # LRC image
 
