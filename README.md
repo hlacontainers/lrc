@@ -1,3 +1,5 @@
+![Build Status](https://img.shields.io/docker/cloud/build/hlacontainers/lrc)
+
 # LRC image
 
 The Local RTI Component (LRC) is a set of C++ and Java libraries that federate applications must use to communicate with the RTI. The API of the libraries is standardized, but the implementation of the libraries is RTI (vendor) specific. Depending on what RTI implementation is used, a central component (Pitch CRC or VTMaK RTI Executive) is required for the execution of a federation.
