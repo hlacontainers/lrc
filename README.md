@@ -92,6 +92,8 @@ The sleep period applies from the point in time where the master port is open (i
 | ``PITCH_BOOSTER_ADVERTISE_ADDRESS`` | Applies to booster mode. Use this address to advertise the LRC to Booster. The format is ``[<host address>][:[<mintcpport>]-[<maxtcpport>][:[<minudpport>]-[<maxudpport>]]]`` | `:6000-6999:5000-5999`                       |
 | ``PITCH_ENABLETRACE``               | Set to any value to enable. Enable RTI and Federate Ambassador tracing to console. | No tracing                                   |
 
+#### Notes on the advertise address
+
 When using ``PITCH_ADVERTISE_ADDRESS`` with a port range, make sure that the same port range is also provided in the container ``-p`` option. For example:
 
 ````
@@ -101,9 +103,17 @@ docker run \
 	yourApplicationImagename
 ````
 
-If only the advertise address is specified, then the port range defaults to `6000-6001:6001-6002`.
+If only the advertise address is specified, then the port range defaults to `6000-6000:5000-5000`.
 
-If only the advertise address and the TCP port range are specified, then the UDP port range defaults to `<maxtcpport> .. <maxtcpport>+<maxtcpport>-<mintcpport>`.
+If only the advertise address and the TCP port range are specified, then the UDP port range defaults to `5000-(5000+<maxtcpport>-<mintcpport>)`.
+
+There is a LRC limitation on the UDP port range:
+
+- When using JRE 6 or lower: the LRC selects odd-numbered UDP ports.
+
+- When using JRE 7 or higher: the LRC selects even-numbered UDP ports. For example, UDP port range `30001-30001` is invalid for JRE 8.
+
+This restriction can be disabled by adding`se.pitch.prti1516e.disablePortRestrictions=true` to the LRC settings file.
 
 ### Portico LRC settings
 
