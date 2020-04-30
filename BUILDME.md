@@ -32,7 +32,7 @@ The Portico proprietary library is included under the portico directory.
 
 # Mount LRC files from host file system
 
-If a skeleton LRC image is used then the LRC files must be mounted from the host file system in order to create a functional LRC container. This easily accomplished by installing the (Pitch or VTMaK) RTI under `${RTI_HOME}` and mount this directory in the container. The mount point of the LRC in the container is `/usr/local/lrc/code`. For the Pitch RTI the docker compose file may look like:
+If a skeleton LRC image is used then the LRC files must be mounted from the host file system in order to create a functional LRC container. This is easily accomplished by installing the (Pitch or VTMaK) RTI under `${RTI_HOME}` and mount this directory in the container. The mount point of the LRC in the container is `/usr/local/lrc/code`. For the Pitch RTI the docker compose file may look like:
 
 `````
 version: '3'
