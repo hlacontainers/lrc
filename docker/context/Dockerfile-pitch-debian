@@ -16,20 +16,12 @@ FROM ${REPOSITORY}pitch-crc:${PITCH_VERSION} AS crc
 #########################
 # Create Debian image
 #########################
-FROM ubuntu:18.04
-
-# Install Java
-RUN apt-get update \
-	&& apt-get install -y openjdk-8-jdk netcat iproute2 \
-	&& apt-get clean
+FROM openjdk:11-buster
 
 # LRC files are installed here
 ARG RTI_HOME_FROM=/usr/local/prti1516e
 ENV LRC_HOME=/usr/local/lrc
 ENV RTI_HOME=${LRC_HOME}/code
-
-# ensure JAVA_HOME is set
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre
 
 # Copy LRC files
 COPY --from=crc ${RTI_HOME_FROM}/include ${RTI_HOME}/include
