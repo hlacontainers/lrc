@@ -2,16 +2,6 @@ version: '3'
 
 services:
 
- pi-lrc-base-alpine:
-  build:
-   context: context
-   dockerfile: Dockerfile-pitch-alpine
-   args:
-   - PITCH_VERSION=${PITCH_VERSION}
-   - PITCH_VERSION_STRING=lrc:pitch-${PITCH_VERSION}-alpine
-   - REPOSITORY=${REPOSITORY}
-  image: ${REPOSITORY}lrc:pitch-${PITCH_VERSION}-alpine
-
  pi-lrc-base-debian:
   build:
    context: context

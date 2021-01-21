@@ -2,15 +2,6 @@ version: '3'
 
 services:
   
- po-lrc-base-alpine:
-  build:
-   context: context
-   dockerfile: Dockerfile-portico-alpine
-   args:
-   - PORTICO_VERSION=${PORTICO_VERSION}
-   - PORTICO_VERSION_STRING=lrc:portico-${PORTICO_VERSION}-alpine
-  image: ${REPOSITORY}lrc:portico-${PORTICO_VERSION}-alpine
-
  po-lrc-base-debian:
   build:
    context: context

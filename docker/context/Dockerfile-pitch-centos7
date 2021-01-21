@@ -20,7 +20,7 @@ FROM centos:7
 
 # Install Java
 RUN yum update -y \
-	&& yum install -y java-1.8.0-openjdk nc iproute \
+	&& yum install -y java-11-openjdk nc iproute \
 	&& yum clean all
 
 # LRC files are installed here
