@@ -8,7 +8,7 @@ services:
    dockerfile: Dockerfile-vtmak-centos7
    args:
    - VTMAK_VERSION=${VTMAK_VERSION}
-   - VTMAK_VERSION_STRING=lrc:vtmak-${VTMAK_VERSION}-centos7
+   - VTMAK_VERSION_STRING=lrc:vtmak-${VTMAK_VERSION}-centos7-${JDK}
    - REPOSITORY=${REPOSITORY}
   image: ${REPOSITORY}lrc:vtmak-${VTMAK_VERSION}-centos7
 
