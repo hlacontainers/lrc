@@ -40,7 +40,7 @@ Specific notes on images:
 
 - `lrc:<vendor>-<version>-<platform>`
   - Use for the extension pattern.
-  - Includes Open JDK. 
+  - Includes **Open JDK 8**. 
   - The alpine platform images do not include C++ libraries.
 
 - `lrc:<vendor>-<version>`.
