@@ -51,7 +51,7 @@ services:
   - DISPLAY=${DISPLAY}
 
  app:
-  image: ${REPOSITORY}start:pitch-alpine
+  image: ${REPOSITORY}start:pitch-debian
   volumes:
   - ${RTI_HOME}:/usr/local/lrc/code
   environment:
