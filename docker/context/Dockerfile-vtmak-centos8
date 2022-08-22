@@ -1,0 +1,70 @@
+#
+# Copyright 2020 Tom van den Berg (TNO, The Netherlands).
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Set default for build-time ARGs
+ARG REPOSITORY=hlacontainers/
+ARG VTMAK_VERSION=skeleton
+
+##########################
+# Image with LRC scripts #
+##########################
+FROM ${REPOSITORY}lrc-scripts as scripts
+
+#############################
+# Image with LRC data files #
+#############################
+FROM ${REPOSITORY}vtmak-rtiexec:${VTMAK_VERSION} AS base
+
+ARG VTMAK_VERSION
+
+# LRC files are installed here
+ENV RTI_HOME=/usr/local/makRti${VTMAK_VERSION}
+
+# Remove files we do not need in the next stage
+RUN rm -f $RTI_HOME/lib/libRTI-NG_64.so
+
+# Uncomment these to remove the RTI Assistant related files
+# to make a smaller base image.
+#RUN rm -rf $RTI_HOME/lib/gui
+#RUN rm -rf $RTI_HOME/bin/gui
+#RUN find $RTI_HOME/bin -type f -not -name '*.xml' -delete
+# In order to not start the assistant the following ENV must be set in application image:
+# RTI_ASSISTANT_DISABLE=1
+# Thus if the RTI Assistant related files are removed, ensure to disable the assistant.
+
+##################
+# LRC Base image #
+##################
+FROM quay.io/centos/centos:stream8 
+
+ARG VTMAK_VERSION
+
+# Install Java and network utilities that are needed by the launch scripts (if used).
+RUN yum update -y \
+	&& yum -y install java-17-openjdk \
+	&& yum -y install nc iproute procps hostname \
+	&& rm -rf /var/cache/yum/*
+
+# Ensure JAVA_HOME is set
+ENV JAVA_HOME=/usr/lib/jvm/jre-openjdk
+
+# Get application launch scripts
+COPY --from=scripts /scripts /scripts/
+
+# LRC files are installed here
+ENV RTI_HOME=/usr/local/makRti${VTMAK_VERSION}
+
+# Copy LRC files
+COPY --from=base ${RTI_HOME}/bin/		${RTI_HOME}/bin/
+COPY --from=base ${RTI_HOME}/lib/		${RTI_HOME}/lib/
+COPY --from=base ${RTI_HOME}/include/	${RTI_HOME}/include/
+COPY --from=base ${RTI_HOME}/rid.mtl	${RTI_HOME}/rid.mtl
+
+# Set RID file
+ENV MAK_RTI_RID_FILE=${RTI_HOME}/rid.mtl
+
+# Include the RTI libraries in the library paths
+ENV LD_LIBRARY_PATH=${RTI_HOME}/lib/java:${RTI_HOME}/lib:${RTI_HOME}/lib/gui:${LD_LIBRARY_PATH}
+ENV CLASSPATH=${RTI_HOME}/lib/hla.jar:${CLASSPATH}

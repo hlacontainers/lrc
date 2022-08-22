@@ -2,22 +2,11 @@ version: '3'
 
 services:
 
- ma-lrc-base-centos7:
+ ma-lrc-base-centos8:
   build:
    context: context
-   dockerfile: Dockerfile-vtmak-centos7
+   dockerfile: Dockerfile-vtmak-centos8
    args:
    - VTMAK_VERSION=${VTMAK_VERSION}
-   - VTMAK_VERSION_STRING=lrc:vtmak-${VTMAK_VERSION}-centos7-${JDK}
    - REPOSITORY=${REPOSITORY}
-  image: ${REPOSITORY}lrc:vtmak-${VTMAK_VERSION}-centos7
-
- ma-lrc-base:
-  build:
-   context: context
-   dockerfile: Dockerfile-vtmak
-   args:
-   - VTMAK_VERSION=${VTMAK_VERSION}
-   - VTMAK_VERSION_STRING=lrc:vtmak-${VTMAK_VERSION}
-   - REPOSITORY=${REPOSITORY}
-  image: ${REPOSITORY}lrc:vtmak-${VTMAK_VERSION}
+  image: ${REPOSITORY}lrc:vtmak-${VTMAK_VERSION}-centos8-${JDK}

@@ -1,0 +1,53 @@
+#
+# Copyright 2020 Tom van den Berg (TNO, The Netherlands).
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Set default for build-time ARGs
+ARG REPOSITORY=hlacontainers/
+ARG PITCH_VERSION=skeleton
+
+##########################
+# Image with LRC scripts #
+##########################
+FROM ${REPOSITORY}lrc-scripts as scripts
+
+#############################
+# Image with LRC data files #
+#############################
+FROM ${REPOSITORY}pitch-crc:${PITCH_VERSION} AS crc
+
+##################
+# LRC Base image #
+##################
+FROM quay.io/centos/centos:stream8 
+
+# Install Java and network utilities that are needed by the launch scripts (if used).
+RUN yum update -y \
+	&& yum -y install java-17-openjdk \
+	&& yum -y install nc iproute procps hostname \
+	&& rm -rf /var/cache/yum/*
+
+# Ensure JAVA_HOME is set
+ENV JAVA_HOME=/usr/lib/jvm/jre-openjdk
+
+# Get application launch scripts
+COPY --from=scripts /scripts /scripts/
+
+# LRC files are installed here
+ENV RTI_HOME=/usr/local/prti1516e
+
+# Copy LRC files
+COPY --from=crc ${RTI_HOME}/include ${RTI_HOME}/include/
+COPY --from=crc ${RTI_HOME}/lib ${RTI_HOME}/lib/
+
+# Copy LRC setting files
+COPY --from=crc /root/prti1516e/prti1516eLRC.settings /root/prti1516e/
+COPY --from=crc /root/prti1516e/prti1516e.logging /root/prti1516e/
+
+# Set RID file
+ENV PITCH_RTI_RID_FILE=/root/prti1516e/prti1516eLRC.settings
+
+# Set common environment variables
+ENV LD_LIBRARY_PATH=${RTI_HOME}/lib/gcc73_64:${JAVA_HOME}/lib:${JAVA_HOME}/lib/server:${LD_LIBRARY_PATH}
+ENV CLASSPATH=${RTI_HOME}/lib/prti1516e.jar:${RTI_HOME}/lib/prticore.jar:${RTI_HOME}/lib/booster1516.jar:${CLASSPATH}

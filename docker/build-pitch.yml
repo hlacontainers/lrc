@@ -8,26 +8,14 @@ services:
    dockerfile: Dockerfile-pitch-debian
    args:
    - PITCH_VERSION=${PITCH_VERSION}
-   - PITCH_VERSION_STRING=lrc:pitch-${PITCH_VERSION}-debian
    - REPOSITORY=${REPOSITORY}
   image: ${REPOSITORY}lrc:pitch-${PITCH_VERSION}-debian-${JDK}
 
- pi-lrc-base-centos7:
+ pi-lrc-base-centos8:
   build:
    context: context
-   dockerfile: Dockerfile-pitch-centos7
+   dockerfile: Dockerfile-pitch-centos8
    args:
    - PITCH_VERSION=${PITCH_VERSION}
-   - PITCH_VERSION_STRING=lrc:pitch-${PITCH_VERSION}-centos7
    - REPOSITORY=${REPOSITORY}
-  image: ${REPOSITORY}lrc:pitch-${PITCH_VERSION}-centos7-${JDK}
-
- pi-lrc-base:
-  build:
-   context: context
-   dockerfile: Dockerfile-pitch
-   args:
-   - PITCH_VERSION=${PITCH_VERSION}
-   - PITCH_VERSION_STRING=lrc:pitch-${PITCH_VERSION}
-   - REPOSITORY=${REPOSITORY}
-  image: ${REPOSITORY}lrc:pitch-${PITCH_VERSION}
+  image: ${REPOSITORY}lrc:pitch-${PITCH_VERSION}-centos8-${JDK}

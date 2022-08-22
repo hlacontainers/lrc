@@ -38,12 +38,18 @@ RUN rm -rf \
 ##################
 # LRC Base image #
 ##################
-FROM openjdk:17-buster
+FROM quay.io/centos/centos:stream8 
 
 ARG PORTICO_VERSION
 
-# Install network utilities that are needed by the launch scripts (if used).
-RUN apt-get update -y && apt-get install -y netcat
+# Install Java and network utilities that are needed by the launch scripts (if used).
+RUN yum update -y \
+	&& yum -y install java-17-openjdk \
+	&& yum -y install nc iproute procps hostname \
+	&& rm -rf /var/cache/yum/*
+
+# ensure JAVA_HOME is set
+ENV JAVA_HOME=/usr/lib/jvm/jre-openjdk
 
 # Get application launch scripts
 COPY --from=scripts /scripts /scripts/
@@ -53,10 +59,10 @@ ENV RTI_HOME=/usr/local/portico/portico-${PORTICO_VERSION}
 
 # Copy LRC files
 COPY --from=base ${RTI_HOME} ${RTI_HOME}/
-
+	
 # Set RID file
 ENV PORTICO_RTI_RID_FILE=${RTI_HOME}/RTI.rid
 
 # Set common environment variables
-ENV	LD_LIBRARY_PATH=${RTI_HOME}/lib/gcc4:${JAVA_HOME}/lib/amd64:${JAVA_HOME}/lib/amd64/server:${LD_LIBRARY_PATH}
+ENV	LD_LIBRARY_PATH==${RTI_HOME}/lib/gcc4:$JAVA_HOME/lib/amd64:$JAVA_HOME/lib/amd64/server:${LD_LIBRARY_PATH}
 ENV	CLASSPATH=${RTI_HOME}/lib/portico.jar:${CLASSPATH}

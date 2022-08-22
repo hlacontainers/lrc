@@ -6,45 +6,42 @@
 # Set default for build-time ARGs
 ARG REPOSITORY=hlacontainers/
 ARG PITCH_VERSION=skeleton
-ARG PITCH_VERSION_STRING=lrc:pitch-${PITCH_VERSION}-debian
 
-#########################
-# Create Base image
-#########################
+##########################
+# Image with LRC scripts #
+##########################
+FROM ${REPOSITORY}lrc-scripts as scripts
+
+#############################
+# Image with LRC data files #
+#############################
 FROM ${REPOSITORY}pitch-crc:${PITCH_VERSION} AS crc
 
-#########################
-# Create Debian image
-#########################
-FROM openjdk:11-buster
+##################
+# LRC Base image #
+##################
+FROM openjdk:17-buster
+
+# Install network utilities that are needed by the launch scripts (if used).
+RUN apt-get update -y && apt-get install -y netcat
+
+# Get application launch scripts
+COPY --from=scripts /scripts /scripts/
 
 # LRC files are installed here
-ARG RTI_HOME_FROM=/usr/local/prti1516e
-ENV LRC_HOME=/usr/local/lrc
-ENV RTI_HOME=${LRC_HOME}/code
+ARG RTI_HOME=/usr/local/prti1516e
 
 # Copy LRC files
-COPY --from=crc ${RTI_HOME_FROM}/include ${RTI_HOME}/include
-COPY --from=crc ${RTI_HOME_FROM}/lib ${RTI_HOME}/lib
+COPY --from=crc ${RTI_HOME}/include ${RTI_HOME}/include/
+COPY --from=crc ${RTI_HOME}/lib ${RTI_HOME}/lib/
 
 # Copy LRC setting files
-COPY --from=crc /root/prti1516e/prti1516eLRC.settings ${RTI_HOME}
-COPY --from=crc /root/prti1516e/prti1516e.logging ${RTI_HOME}
+COPY --from=crc /root/prti1516e/prti1516eLRC.settings /root/prti1516e/
+COPY --from=crc /root/prti1516e/prti1516e.logging /root/prti1516e/
 
-# Copy launch scripts
-ADD pitch/init.sh launch.sh ${LRC_HOME}/
+# Set RID file
+ENV PITCH_RTI_RID_FILE=/root/prti1516e/prti1516eLRC.settings
 
 # Set common environment variables
-ENV LRC_CLASSPATH=${RTI_HOME}/lib/prti1516e.jar:${RTI_HOME}/lib/prticore.jar:${RTI_HOME}/lib/booster1516.jar
-ENV LRC_LIBRARYPATH=${RTI_HOME}/lib/gcc41_64:${JAVA_HOME}/lib/amd64:${JAVA_HOME}/lib/amd64/server
-ENV LD_LIBRARY_PATH=${LRC_LIBRARYPATH}:${LD_LIBRARY_PATH}
-ENV CLASSPATH=${LRC_CLASSPATH}:${CLASSPATH}
-
-# Set entrypoint and ensure it is executable
-WORKDIR ${LRC_HOME}
-ENTRYPOINT ["/bin/sh", "./launch.sh"]
-RUN chmod +x ./launch.sh
-
-# Set version from provided argument
-ARG PITCH_VERSION_STRING
-ENV LRC_VERSION $PITCH_VERSION_STRING
+ENV LD_LIBRARY_PATH=${RTI_HOME}/lib/prti1516e.jar:${RTI_HOME}/lib/prticore.jar:${RTI_HOME}/lib/booster1516.jar:${LD_LIBRARY_PATH}
+ENV CLASSPATH=${RTI_HOME}/lib/gcc41_64:${JAVA_HOME}/lib/amd64:${JAVA_HOME}/lib/amd64/server:${CLASSPATH}

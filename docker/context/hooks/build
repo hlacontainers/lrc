@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# Build hook for Docker Hub
-
-docker build -f $DOCKERFILE_PATH -t $IMAGE_NAME --build-arg PITCH_VERSION=$PITCH_VERSION --build-arg PITCH_VERSION_STRING=$IMAGE_NAME --build-arg PORTICO_VERSION=$PORTICO_VERSION --build-arg PORTICO_VERSION_STRING=$IMAGE_NAME --build-arg VTMAK_VERSION=$VTMAK_VERSION --build-arg VTMAK_VERSION_STRING=$IMAGE_NAME .
-

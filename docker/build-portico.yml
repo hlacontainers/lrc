@@ -8,23 +8,12 @@ services:
    dockerfile: Dockerfile-portico-debian
    args:
    - PORTICO_VERSION=${PORTICO_VERSION}
-   - PORTICO_VERSION_STRING=lrc:portico-${PORTICO_VERSION}-debian-${JDK}
-  image: ${REPOSITORY}lrc:portico-${PORTICO_VERSION}-debian
+  image: ${REPOSITORY}lrc:portico-${PORTICO_VERSION}-debian-${JDK}
 
- po-lrc-base-centos7:
+ po-lrc-base-centos8:
   build:
    context: context
-   dockerfile: Dockerfile-portico-centos7
+   dockerfile: Dockerfile-portico-centos8
    args:
    - PORTICO_VERSION=${PORTICO_VERSION}
-   - PORTICO_VERSION_STRING=lrc:portico-${PORTICO_VERSION}-centos7-${JDK}
-  image: ${REPOSITORY}lrc:portico-${PORTICO_VERSION}-centos7
-
- po-lrc-base:
-  build:
-   context: context
-   dockerfile: Dockerfile-portico
-   args:
-   - PORTICO_VERSION=${PORTICO_VERSION}
-   - PORTICO_VERSION_STRING=lrc:portico-${PORTICO_VERSION}
-  image: ${REPOSITORY}lrc:portico-${PORTICO_VERSION}
+  image: ${REPOSITORY}lrc:portico-${PORTICO_VERSION}-centos8-${JDK}
