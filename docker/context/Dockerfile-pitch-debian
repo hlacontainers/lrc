@@ -35,11 +35,11 @@ ARG RTI_HOME=/usr/local/prti1516e
 COPY --from=crc ${RTI_HOME}/include ${RTI_HOME}/include/
 COPY --from=crc ${RTI_HOME}/lib ${RTI_HOME}/lib/
 
-# Copy LRC setting files
+# Copy LRC setting files to the default directory where the Pitch RTI can find the RID and log settings file
 COPY --from=crc /root/prti1516e/prti1516eLRC.settings /root/prti1516e/
 COPY --from=crc /root/prti1516e/prti1516e.logging /root/prti1516e/
 
-# Set RID file
+# Default RID file
 ENV PITCH_RTI_RID_FILE=/root/prti1516e/prti1516eLRC.settings
 
 # Set common environment variables

@@ -45,7 +45,7 @@ COPY --from=crc ${RTI_HOME}/lib ${RTI_HOME}/lib/
 COPY --from=crc /root/prti1516e/prti1516eLRC.settings /root/prti1516e/
 COPY --from=crc /root/prti1516e/prti1516e.logging /root/prti1516e/
 
-# Set RID file
+# Default RID file
 ENV PITCH_RTI_RID_FILE=/root/prti1516e/prti1516eLRC.settings
 
 # Set common environment variables

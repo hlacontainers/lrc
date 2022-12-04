@@ -60,7 +60,7 @@ ENV RTI_HOME=/usr/local/portico/portico-${PORTICO_VERSION}
 # Copy LRC files
 COPY --from=base ${RTI_HOME} ${RTI_HOME}/
 	
-# Set RID file
+# Default RID file
 ENV PORTICO_RTI_RID_FILE=${RTI_HOME}/RTI.rid
 
 # Set common environment variables
