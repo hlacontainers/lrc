@@ -62,7 +62,7 @@ COPY --from=base ${RTI_HOME}/lib/		${RTI_HOME}/lib/
 COPY --from=base ${RTI_HOME}/include/	${RTI_HOME}/include/
 COPY --from=base ${RTI_HOME}/rid.mtl	${RTI_HOME}/rid.mtl
 
-# Set RID file
+# Default RID file
 ENV MAK_RTI_RID_FILE=${RTI_HOME}/rid.mtl
 
 # Include the RTI libraries in the library paths

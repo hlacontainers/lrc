@@ -23,7 +23,7 @@ Where:
 
 The container `<options>` are passed on to the federate application. In principle, command line options are federate application specific.
 
-## Environment variable
+## Environment variables
 
 Environment variables are used to configure an LRC (LRC Settings), or to provide information to the
 federate application (federate application settings). LRC settings are mostly LRC image dependent. For
